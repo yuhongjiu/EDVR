@@ -53,13 +53,15 @@ class Vimeo90KDataset(data.Dataset):
             self.LQ_frames_list.append(i + (9 - opt['N_frames']) // 2)
 
         #### directly load image keys
-        if opt['cache_keys']:
+        if self.data_type == 'lmdb':
+            self.paths_GT, _ = util.get_image_paths(self.data_type, opt['dataroot_GT'])
+            logger.info('Using lmdb meta info for cache keys.')
+        elif opt['cache_keys']:
             logger.info('Using cache keys: {}'.format(opt['cache_keys']))
-            cache_keys = opt['cache_keys']
+            self.paths_GT = pickle.load(open(opt['cache_keys'], 'rb'))['keys']
         else:
-            cache_keys = 'Vimeo90K_train_keys.pkl'
-        logger.info('Using cache keys - {}.'.format(cache_keys))
-        self.paths_GT = pickle.load(open('./data/{}'.format(cache_keys), 'rb'))
+            raise ValueError(
+                'Need to create cache keys (meta_info.pkl) by running [create_lmdb.py]')
         assert self.paths_GT, 'Error: GT path is empty.'
 
         if self.data_type == 'lmdb':
@@ -98,9 +100,8 @@ class Vimeo90KDataset(data.Dataset):
     def __getitem__(self, index):
         if self.data_type == 'mc':
             self._ensure_memcached()
-        elif self.data_type == 'lmdb':
-            if (self.GT_env is None) or (self.LQ_env is None):
-                self._init_lmdb()
+        elif self.data_type == 'lmdb' and (self.GT_env is None or self.LQ_env is None):
+            self._init_lmdb()
 
         scale = self.opt['scale']
         GT_size = self.opt['GT_size']

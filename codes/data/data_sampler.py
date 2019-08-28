@@ -1,6 +1,6 @@
 """
 Modified from torch.utils.data.distributed.DistributedSampler
-Support enlarging the dataset for *iter-oriented* training, for saving time when restart the
+Support enlarging the dataset for *iteration-oriented* training, for saving time when restart the
 dataloader after each epoch
 """
 import math

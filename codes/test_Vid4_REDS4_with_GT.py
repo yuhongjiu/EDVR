@@ -11,9 +11,8 @@ import cv2
 import torch
 
 import utils.util as util
-import utils.test_util as test_util
 import data.util as data_util
-import models.modules.EDVR_arch as EDVR_arch
+import models.archs.EDVR_arch as EDVR_arch
 
 
 def main():
@@ -22,7 +21,7 @@ def main():
     #################
     device = torch.device('cuda')
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-    data_mode = 'sharp_bicubic'  # Vid4 | sharp_bicubic | blur_bicubic | blur | blur_comp
+    data_mode = 'Vid4'  # Vid4 | sharp_bicubic | blur_bicubic | blur | blur_comp
     # Vid4: SR
     # REDS4: sharp_bicubic (SR-clean), blur_bicubic (SR-blur);
     #        blur (deblur-clean), blur_comp (deblur-compression).
@@ -130,23 +129,23 @@ def main():
             util.mkdirs(save_subfolder)
 
         #### read LQ and GT images
-        imgs_LQ = test_util.read_img_seq(subfolder)
+        imgs_LQ = data_util.read_img_seq(subfolder)
         img_GT_l = []
         for img_GT_path in sorted(glob.glob(osp.join(subfolder_GT, '*'))):
-            img_GT_l.append(test_util.read_img(img_GT_path))
+            img_GT_l.append(data_util.read_img(None, img_GT_path))
 
         avg_psnr, avg_psnr_border, avg_psnr_center, N_border, N_center = 0, 0, 0, 0, 0
 
         # process each image
         for img_idx, img_path in enumerate(img_path_l):
             img_name = osp.splitext(osp.basename(img_path))[0]
-            select_idx = test_util.index_generation(img_idx, max_idx, N_in, padding=padding)
+            select_idx = data_util.index_generation(img_idx, max_idx, N_in, padding=padding)
             imgs_in = imgs_LQ.index_select(0, torch.LongTensor(select_idx)).unsqueeze(0).to(device)
 
             if flip_test:
-                output = test_util.flipx4_forward(model, imgs_in)
+                output = util.flipx4_forward(model, imgs_in)
             else:
-                output = test_util.single_forward(model, imgs_in)
+                output = util.single_forward(model, imgs_in)
             output = util.tensor2img(output.squeeze(0))
 
             if save_imgs:
@@ -160,7 +159,7 @@ def main():
                 GT = data_util.bgr2ycbcr(GT, only_y=True)
                 output = data_util.bgr2ycbcr(output, only_y=True)
 
-            output, GT = test_util.crop_border([output, GT], crop_border)
+            output, GT = util.crop_border([output, GT], crop_border)
             crt_psnr = util.calculate_psnr(output * 255, GT * 255)
             logger.info('{:3d} - {:25} \tPSNR: {:.6f} dB'.format(img_idx + 1, img_name, crt_psnr))
 

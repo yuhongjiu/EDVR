@@ -43,13 +43,16 @@ class REDSDataset(data.Dataset):
         self.data_type = self.opt['data_type']
         self.LR_input = False if opt['GT_size'] == opt['LQ_size'] else True  # low resolution inputs
         #### directly load image keys
-        if opt['cache_keys']:
+        if self.data_type == 'lmdb':
+            self.paths_GT, _ = util.get_image_paths(self.data_type, opt['dataroot_GT'])
+            logger.info('Using lmdb meta info for cache keys.')
+        elif opt['cache_keys']:
             logger.info('Using cache keys: {}'.format(opt['cache_keys']))
-            cache_keys = opt['cache_keys']
+            self.paths_GT = pickle.load(open(opt['cache_keys'], 'rb'))['keys']
         else:
-            cache_keys = 'REDS_trainval_keys.pkl'
-        logger.info('Using cache keys - {}.'.format(cache_keys))
-        self.paths_GT = pickle.load(open('./data/{}'.format(cache_keys), 'rb'))
+            raise ValueError(
+                'Need to create cache keys (meta_info.pkl) by running [create_lmdb.py]')
+
         # remove the REDS4 for testing
         self.paths_GT = [
             v for v in self.paths_GT if v.split('_')[0] not in ['000', '011', '015', '020']
@@ -100,9 +103,8 @@ class REDSDataset(data.Dataset):
     def __getitem__(self, index):
         if self.data_type == 'mc':
             self._ensure_memcached()
-        elif self.data_type == 'lmdb':
-            if (self.GT_env is None) or (self.LQ_env is None):
-                self._init_lmdb()
+        elif self.data_type == 'lmdb' and (self.GT_env is None or self.LQ_env is None):
+            self._init_lmdb()
 
         scale = self.opt['scale']
         GT_size = self.opt['GT_size']

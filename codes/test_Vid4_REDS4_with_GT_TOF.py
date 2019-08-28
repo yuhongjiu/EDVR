@@ -13,7 +13,7 @@ import torch
 
 import utils.util as util
 import data.util as data_util
-import models.modules.TOF_arch as TOF_arch
+import models.archs.TOF_arch as TOF_arch
 
 
 def main():

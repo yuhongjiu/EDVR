@@ -13,7 +13,7 @@ import torch
 
 import utils.util as util
 import data.util as data_util
-import models.modules.DUF_arch as DUF_arch
+import models.archs.DUF_arch as DUF_arch
 
 
 def main():

@@ -1,10 +1,10 @@
-'''create dataset and dataloader'''
+"""create dataset and dataloader"""
 import logging
 import torch
 import torch.utils.data
 
 
-def create_dataloader(dataset, dataset_opt, opt, sampler):
+def create_dataloader(dataset, dataset_opt, opt=None, sampler=None):
     phase = dataset_opt['phase']
     if phase == 'train':
         if opt['dist']:
@@ -22,15 +22,23 @@ def create_dataloader(dataset, dataset_opt, opt, sampler):
                                            pin_memory=False)
     else:
         return torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=False, num_workers=1,
-                                           pin_memory=True)
+                                           pin_memory=False)
 
 
 def create_dataset(dataset_opt):
     mode = dataset_opt['mode']
-    if mode == 'REDS':
+    # datasets for image restoration
+    if mode == 'LQ':
+        from data.LQ_dataset import LQDataset as D
+    elif mode == 'LQGT':
+        from data.LQGT_dataset import LQGTDataset as D
+    # datasets for video restoration
+    elif mode == 'REDS':
         from data.REDS_dataset import REDSDataset as D
     elif mode == 'Vimeo90K':
         from data.Vimeo90K_dataset import Vimeo90KDataset as D
+    elif mode == 'video_test':
+        from data.video_test_dataset import VideoTestDataset as D
     else:
         raise NotImplementedError('Dataset [{:s}] is not recognized.'.format(mode))
     dataset = D(dataset_opt)
