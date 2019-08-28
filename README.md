@@ -1,3 +1,7 @@
+# We have merged EDVR into [MMSR](https://github.com/open-mmlab/mmsr) :smile:
+---
+
+
 # EDVR [[BasicSR]](https://github.com/xinntao/BasicSR) [[DNI]](https://xinntao.github.io/projects/DNI)
 #### [Paper](https://arxiv.org/abs/1905.02716) | [Project Page](https://xinntao.github.io/projects/EDVR) | [Open VideoRestoration Doc (under construction)](https://xinntao.github.io/open-videorestoration/) 
 ### Video Restoration with Enhanced Deformable Convolutional Networks
