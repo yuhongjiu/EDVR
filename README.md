@@ -1,6 +1,8 @@
-# We have merged EDVR into [MMSR](https://github.com/open-mmlab/mmsr) :smile:
----
+## We have merged EDVR into [MMSR](https://github.com/open-mmlab/mmsr) :smile:
 
+MMSR is an open source image and video super-resolution toolbox based on PyTorch. It is a part of the [open-mmlab](https://github.com/open-mmlab) project developed by [Multimedia Laboratory, CUHK](http://mmlab.ie.cuhk.edu.hk/). MMSR is based on our previous projects: [BasicSR](https://github.com/xinntao/BasicSR), [ESRGAN](https://github.com/xinntao/ESRGAN), and [EDVR](https://github.com/xinntao/EDVR).
+
+---
 
 # EDVR [[BasicSR]](https://github.com/xinntao/BasicSR) [[DNI]](https://xinntao.github.io/projects/DNI)
 #### [Paper](https://arxiv.org/abs/1905.02716) | [Project Page](https://xinntao.github.io/projects/EDVR) | [Open VideoRestoration Doc (under construction)](https://xinntao.github.io/open-videorestoration/) 
