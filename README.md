@@ -27,17 +27,16 @@ EDVR won all four tracks in [NTIRE 2019 Challenges on **Video Restoration and En
 ## Dependencies and Installation
 
 - Python 3 (Recommend to use [Anaconda](https://www.anaconda.com/download/#linux))
-- [PyTorch >= 1.0](https://pytorch.org/)
+- [PyTorch >= 1.1](https://pytorch.org/)
 - NVIDIA GPU + [CUDA](https://developer.nvidia.com/cuda-downloads)
-- [Deformable Convolution](https://arxiv.org/abs/1703.06211). We use [Charles Shang](https://github.com/CharlesShang)'s [DCNv2](https://github.com/CharlesShang/DCNv2) implementation. Please first compile it. 
+- [Deformable Convolution](https://arxiv.org/abs/1703.06211). We use [mmdetection](https://github.com/open-mmlab/mmdetection)'s dcn implementation. Please first compile it.
   ```
-  cd ./codes/models/modules/DCNv2
-  bash make.sh
+  cd ./codes/models/archs/dcn
+  python setup.py develop
   ```
 - Python packages: `pip install numpy opencv-python lmdb pyyaml`
-- TensorBoard: 
+- TensorBoard:
   - PyTorch >= 1.1: `pip install tb-nightly future`
-  - PyTorch == 1.0: `pip install tensorboardX`
 
 ## Dataset Preparation
 We use datasets in LDMB format for faster IO speed. Please refer to [wiki](https://github.com/xinntao/EDVR/wiki/Prepare-datasets-in-LMDB-format) for more details.
