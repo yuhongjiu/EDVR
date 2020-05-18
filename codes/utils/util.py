@@ -94,6 +94,19 @@ def setup_logger(logger_name, root, phase, level=logging.INFO, screen=False, tof
 ####################
 # image convert
 ####################
+def crop_border(img_list, crop_border):
+    """Crop borders of images
+    Args:
+        img_list (list [Numpy]): HWC
+        crop_border (int): crop border for each end of height and weight
+
+    Returns:
+        (list [Numpy]): cropped image list
+    """
+    if crop_border == 0:
+        return img_list
+    else:
+        return [v[crop_border:-crop_border, crop_border:-crop_border] for v in img_list]
 
 
 def tensor2img(tensor, out_type=np.uint8, min_max=(0, 1)):
@@ -159,6 +172,50 @@ def DUF_downsample(x, scale=4):
     x = x[:, :, 2:-2, 2:-2]
     x = x.view(B, T, C, x.size(2), x.size(3))
     return x
+
+
+def single_forward(model, inp):
+    """PyTorch model forward (single test), it is just a simple warpper
+    Args:
+        model (PyTorch model)
+        inp (Tensor): inputs defined by the model
+
+    Returns:
+        output (Tensor): outputs of the model. float, in CPU
+    """
+    with torch.no_grad():
+        model_output = model(inp)
+        if isinstance(model_output, list) or isinstance(model_output, tuple):
+            output = model_output[0]
+        else:
+            output = model_output
+    output = output.data.float().cpu()
+    return output
+
+
+def flipx4_forward(model, inp):
+    """Flip testing with X4 self ensemble, i.e., normal, flip H, flip W, flip H and W
+    Args:
+        model (PyTorch model)
+        inp (Tensor): inputs defined by the model
+
+    Returns:
+        output (Tensor): outputs of the model. float, in CPU
+    """
+    # normal
+    output_f = single_forward(model, inp)
+
+    # flip W
+    output = single_forward(model, torch.flip(inp, (-1, )))
+    output_f = output_f + torch.flip(output, (-1, ))
+    # flip H
+    output = single_forward(model, torch.flip(inp, (-2, )))
+    output_f = output_f + torch.flip(output, (-2, ))
+    # flip both H and W
+    output = single_forward(model, torch.flip(inp, (-2, -1)))
+    output_f = output_f + torch.flip(output, (-2, -1))
+
+    return output_f / 4
 
 
 ####################

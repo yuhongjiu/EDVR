@@ -1,7 +1,7 @@
 #### general settings
 name: 001_EDVRwoTSA_scratch_lr4e-4_600k_REDS_LrCAR4S
 use_tb_logger: true
-model: VideoSR_base
+model: video_base
 distortion: sr
 scale: 4
 gpu_ids: [0,1,2,3,4,5,6,7]
@@ -14,9 +14,9 @@ datasets:
     interval_list: [1]
     random_reverse: false
     border_mode: false
-    dataroot_GT: /home/xtwang/datasets/REDS/train_sharp_wval.lmdb
-    dataroot_LQ: /home/xtwang/datasets/REDS/train_sharp_bicubic_wval.lmdb
-    cache_keys: REDS_trainval_keys.pkl
+    dataroot_GT: ../datasets/REDS/train_sharp_wval.lmdb
+    dataroot_LQ: ../datasets/REDS/train_sharp_bicubic_wval.lmdb
+    cache_keys: ~
 
     N_frames: 5
     use_shuffle: true
@@ -61,11 +61,11 @@ train:
 
   pixel_criterion: cb
   pixel_weight: 1.0
-  val_freq: !!float 2e3
+  val_freq: !!float 5e3
 
   manual_seed: 0
 
 #### logger
 logger:
   print_freq: 100
-  save_checkpoint_freq: !!float 2e3
+  save_checkpoint_freq: !!float 5e3

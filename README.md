@@ -1,3 +1,9 @@
+## We have merged EDVR into [MMSR](https://github.com/open-mmlab/mmsr) :smile:
+
+MMSR is an open source image and video super-resolution toolbox based on PyTorch. It is a part of the [open-mmlab](https://github.com/open-mmlab) project developed by [Multimedia Laboratory, CUHK](http://mmlab.ie.cuhk.edu.hk/). MMSR is based on our previous projects: [BasicSR](https://github.com/xinntao/BasicSR), [ESRGAN](https://github.com/xinntao/ESRGAN), and [EDVR](https://github.com/xinntao/EDVR).
+
+---
+
 # EDVR [[BasicSR]](https://github.com/xinntao/BasicSR) [[DNI]](https://xinntao.github.io/projects/DNI)
 #### [Paper](https://arxiv.org/abs/1905.02716) | [Project Page](https://xinntao.github.io/projects/EDVR) | [Open VideoRestoration Doc (under construction)](https://xinntao.github.io/open-videorestoration/) 
 ### Video Restoration with Enhanced Deformable Convolutional Networks
@@ -10,15 +16,9 @@ EDVR won all four tracks in [NTIRE 2019 Challenges on **Video Restoration and En
 - **State of the art**: Winners in NTIRE 2019 Challenges on Video Restoration and Enhancement
 - **Multi-GPU (distributed) training**
 
----
-- We are going to have a presentation in NTIRE 2019 Workshop (Monday, June 17, 2019 - room 104A Long Beach Convention Center, posters: Pacific Arena Ballroom). Welcome to our poster!
-
-- Check out our CVPR19 work: **DNI** - [`Deep Network Interpolation for Continuous Imagery Effect Transition`](https://xinntao.github.io/projects/DNI)
-
----
-
-
 ### Updates
+[2019-06-28] Provide training logs and pretrained model for EDVR-M. Check [here](https://github.com/xinntao/EDVR/wiki/Testing-and-Training). <br/>
+[2019-06-28] Support [TOFlow testing (SR)](http://toflow.csail.mit.edu/) (converted from [officially released models](https://github.com/anchen1011/toflow)). <br/>
 [2019-06-12] Add training codes.<br/>
 [2019-06-11] Add data preparation in [wiki](https://github.com/xinntao/EDVR/wiki/Prepare-datasets-in-LMDB-format).<br/>
 [2019-06-07] Support [DUF testing](http://openaccess.thecvf.com/content_cvpr_2018/papers/Jo_Deep_Video_Super-Resolution_CVPR_2018_paper.pdf) (converted from [officially released models](https://github.com/yhjo09/VSR-DUF)). <br/>
@@ -27,17 +27,16 @@ EDVR won all four tracks in [NTIRE 2019 Challenges on **Video Restoration and En
 ## Dependencies and Installation
 
 - Python 3 (Recommend to use [Anaconda](https://www.anaconda.com/download/#linux))
-- [PyTorch >= 1.0](https://pytorch.org/)
+- [PyTorch >= 1.1](https://pytorch.org/)
 - NVIDIA GPU + [CUDA](https://developer.nvidia.com/cuda-downloads)
-- [Deformable Convolution](https://arxiv.org/abs/1703.06211). We use [Charles Shang](https://github.com/CharlesShang)'s [DCNv2](https://github.com/CharlesShang/DCNv2) implementation. Please first compile it. 
+- [Deformable Convolution](https://arxiv.org/abs/1703.06211). We use [mmdetection](https://github.com/open-mmlab/mmdetection)'s dcn implementation. Please first compile it.
   ```
-  cd ./codes/models/modules/DCNv2
-  bash make.sh
+  cd ./codes/models/archs/dcn
+  python setup.py develop
   ```
 - Python packages: `pip install numpy opencv-python lmdb pyyaml`
-- TensorBoard: 
+- TensorBoard:
   - PyTorch >= 1.1: `pip install tb-nightly future`
-  - PyTorch == 1.0: `pip install tensorboardX`
 
 ## Dataset Preparation
 We use datasets in LDMB format for faster IO speed. Please refer to [wiki](https://github.com/xinntao/EDVR/wiki/Prepare-datasets-in-LMDB-format) for more details.
